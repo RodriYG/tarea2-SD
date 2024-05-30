@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { Kafka } = require("kafkajs");
+const { Kafka, logLevel } = require("kafkajs");
 const pg = require('pg');
 
 const pool = new pg.Pool({
@@ -18,7 +18,8 @@ app.use(bodyParser.json());
 
 const kafka = new Kafka({
     clientId: "my-app",
-    brokers: ["kafka:9092"]
+    brokers: ["kafka:9092"],
+    logLevel: logLevel.NOTHING
 });
 
 app.post('/new_order', async (req, res) => {
@@ -37,7 +38,7 @@ app.post('/new_order', async (req, res) => {
     await producer.send({
         topic: "delivery",
         messages: [
-            { value: JSON.stringify({ id, ...req.body, status }), partition: 0}
+            { value: JSON.stringify({ id, ...req.body, status })}
         ]
     });
 
@@ -53,5 +54,5 @@ app.get('/orders', async (req, res) => {
 })
 
 app.listen(3000, () => {
-	console.log("\nServer PRODUCER corriendo en puerto: 3000\n");
+	console.log("\nServer running on port 3000\n");
 });
