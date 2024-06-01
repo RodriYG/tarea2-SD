@@ -24,13 +24,13 @@ const kafka = new Kafka({
 
 app.post('/new_order', async (req, res) => {
     if (!req.body.name || !req.body.price) {
-        console.log("body vacio")
+        console.log("Body vacio")
         return res.status(400).json({ message: ".body vacio" })
     }
 
     const status = "recibido";
-    await pool.query('INSERT INTO products (product_name, price, status) VALUES ($1, $2, $3)', [req.body.name, req.body.price, status]);
-    const id = (await pool.query('SELECT id FROM products WHERE product_name = $1 AND price = $2', [req.body.name, req.body.price])).rows[0].id;
+    const id = (await pool.query('INSERT INTO products (product_name, price, status) VALUES ($1, $2, $3) returning id', [req.body.name, req.body.price, status])).rows[0].id;
+    
 
     const producer = kafka.producer();
     await producer.connect();
@@ -43,7 +43,6 @@ app.post('/new_order', async (req, res) => {
     });
 
     await producer.disconnect();
-    console.log(req.body)
     res.status(200).json({ message: "Orden enviada" });
 })
 

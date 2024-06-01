@@ -90,13 +90,14 @@ const listening = async () => {
             const name = JSON.parse(message.value.toString()).name;
             const price = JSON.parse(message.value.toString()).price;
             const status = JSON.parse(message.value.toString()).status;
-            console.log("\nPedido recibido")
             console.log("Pedido id: " + id + ", nombre: " + name+ ", precio: " + price + ", estado: " + status);
             let email = {
                 from: 'testmailkafka@gmail.com',
                 to: 'testmailkafka@gmail.com',
                 subject: 'Pedido ' + id + ' Producto: ' + name,
-                text: 'Estado de tu pedido: ' + status + '.'
+                text: 'Pedido número' + id + 
+                    '\nProducto: ' + name +
+                    '\nEstado de tu pedido: ' + status + '.'
             };
             transporter.sendMail(email, (error, info) => {
                 if (error) {
@@ -127,14 +128,16 @@ const listening = async () => {
                 from: 'testmailkafka@gmail.com',
                 to: 'testmailkafka@gmail.com',
                 subject: 'Pedido ' + id + ' Producto: ' + name,
-                text: 'Estado de tu pedido: ' + status + '.'
+                text: 'Pedido número' + id + 
+                    '\nProducto: ' + name +
+                    '\nEstado de tu pedido: ' + status + '.'
             };
             transporter.sendMail(email, (error, info) => {
                 if (error) {
                     console.log(error);
                 }
                 else {
-                    console.log('Email sent: ' + info.response);
+                    console.log('Email enviado: ' + info.response);
                 }
             });
         }
