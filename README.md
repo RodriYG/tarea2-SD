@@ -7,7 +7,7 @@ El servidor esta alojado en la dirección:
 ```sh
 http://localhost:3000
 ```
-Para usar el metodo POST se tienen las direcciones:
+Para usar el metodo POST se tienen la dirección:
 ```sh
 http://localhost:3000/new_order
 ```
