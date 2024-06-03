@@ -32,10 +32,10 @@ const kafka = new Kafka({
     brokers: ["kafka:9092"],
     logLevel: logLevel.NOTHING
 });
-
+producer = kafka.producer();
+producer.connect();
 const update = async (message) => {
-    producer = kafka.producer();
-    await producer.connect();
+    
     
     const id = JSON.parse(message.value.toString()).id;
     const name = JSON.parse(message.value.toString()).name;
@@ -72,11 +72,10 @@ const update = async (message) => {
             ]
         });
     }
-
-    producer.disconnect();
 }
 
 const listening = async () => {
+
     const consumer = kafka.consumer({ groupId: "hola" });
     const consumer_aux = kafka.consumer({ groupId: "updates" });
     await consumer.connect();
@@ -107,6 +106,8 @@ const listening = async () => {
                     console.log('Email sent: ' + info.response);
                 }
             });
+            
+
             let count = 0;
             const intervalId = setInterval(() => {
               update(message);
@@ -114,7 +115,8 @@ const listening = async () => {
               if (count === 3) {
                 clearInterval(intervalId);
               }
-            }, 1000 * 30);
+            }, 1000 * 5);
+            
         }
     })
     await consumer_aux.run({
